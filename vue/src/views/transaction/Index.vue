@@ -4,15 +4,70 @@
             <div class="col-8">
                 <!-- <a href="/create">tes</a> -->
                 <router-link 
-                    :to="{ path: '/create'}" class="btn btn-primary btn-sm"
+                    :to="{ path: '/create'}" class="btn btn-primary btn-sm rounded shadow mb-3"
                 >Add</router-link>
+                <div class="card rounded shadow">
+                    <div class="card-header">
+                        Transaction List
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>                                    
+                                    <th>Amount</th>                                    
+                                    <th>Type</th>                                    
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <!-- transactions dari reactive state -->
+                                <!-- data response dari api endpoind -->
+                                <tr v-for="(transaction, index) in transactions.data" :key="index">
+                                    <td>{{ transaction.title }}</td>
+                                    <td>{{ transaction.amount }}</td>
+                                    <td>{{ transaction.type }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <router-link :to="{name:'transaction.edit', params:{id: transaction.id }}" class="btn btn-sm btn-outline-info">Edit</router-link>
+                                            <button class="btn-sm btn-outline-danger">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+//ref penampung data
+import axios from 'axios'
+import { onMounted, ref } from 'vue'
+//api komposision
 export default {
-    
+    setup() {
+        //reactive state
+        //data penampung
+        let transactions = ref([]);
+
+        onMounted(() => {
+            //get data from api endpoint
+            //axios for fetch ke api
+            axios.get('http://127.0.0.1:8000/api/transaction')
+            .then((result) => {
+                transactions.value = result.data
+            }).catch((err) => {
+                console.log(err.response)
+            });
+        });
+        return {
+            transactions
+        }
+    }
 }
 </script>

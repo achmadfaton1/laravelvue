@@ -8,7 +8,7 @@ const routes = [
     },
     {
         path: '/create',
-        mame: 'transaction.create',
+        name: 'transaction.create',
         component: () => import('@/views/transaction/Create.vue')
     },
     {
